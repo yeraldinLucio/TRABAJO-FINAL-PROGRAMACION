@@ -1,0 +1,222 @@
+import numpy as np
+
+# Definición global de los costos
+costos_viajes = np.array([4000000, 15000000, 6000000, 13000000, 9000000, 3000000, 5000000, 10000000, 7000000, 5000000, 18000000, 20000000, 9000000, 5000000, 8000000, 4000000, 12000000, 25000000])  # Costos por país
+costos_alojamiento = np.array([200000, 1000000, 3000000])  # Costo por noche según el tipo de alojamiento
+costos_transporte = np.array([2000000, 1000000, 500000])  # Costos de transporte
+
+# Inicialización de destinos globales
+destinos = np.array(["Colombia", "Inglaterra", "Nueva York", "Paris", "Brasil", "Ecuador", 
+                     "Mexico", "Corea del Sur", "Chile", "Panama", "Dubai", "Japon", 
+                     "Argentina", "Guatemala", "Puerto Rico", "Honduras", "Alemania", "Egipto"])
+
+# Función para ordenar los destinos por costo
+def ordenar_destinos_por_costo():
+    indices_ordenados = np.argsort(costos_viajes)  # Ordena índices según costos
+    destinos_ordenados = destinos[indices_ordenados]
+    costos_ordenados = costos_viajes[indices_ordenados]
+
+    return destinos_ordenados, costos_ordenados
+
+# Función para consultar los costos de los países
+def consultar_costos_viajes():
+    destinos_ordenados, costos_ordenados = ordenar_destinos_por_costo()
+    
+    print("\nCostos de países ordenados por precio (de menor a mayor):")
+    for i, (destino, costo) in enumerate(zip(destinos_ordenados, costos_ordenados)):
+        print(f"{i + 1}. {destino} - ${costo:,.0f}")
+    
+    while True:
+        opcion = input("\nSelecciona el número del destino que deseas (1-18): ")
+        if opcion.isdigit():
+            opcion = int(opcion) - 1
+            if 0 <= opcion < len(destinos_ordenados):
+                return destinos_ordenados[opcion], costos_ordenados[opcion]
+            else:
+                print("Opción fuera de rango. Intenta de nuevo.")
+        else:
+            print("Entrada no válida. Por favor ingresa un número.")
+            
+# Función para agregar un destino
+def agregar_registro():
+    global destinos, costos_viajes
+    print("\nAgregar un nuevo destino:")
+    nuevo_destino = input("Nombre del nuevo destino: ").strip()
+    try:
+        nuevo_costo = int(input(f"Costo del viaje a {nuevo_destino}: "))
+    except ValueError:
+        print("Por favor, ingresa un valor numérico para el costo.")
+        return
+    
+    # Agregar al final de las listas
+    destinos = np.append(destinos, nuevo_destino)
+    costos_viajes = np.append(costos_viajes, nuevo_costo)
+    print(f"Destino '{nuevo_destino}' agregado exitosamente con un costo de ${nuevo_costo:,.0f}.")
+
+# Función para eliminar un destino
+def eliminar_registro():
+    global destinos, costos_viajes
+    print("\nEliminar un destino:")
+    for i, destino in enumerate(destinos):
+        print(f"{i + 1}. {destino} - ${costos_viajes[i]:,.0f}")
+    
+    try:
+        opcion = int(input("Selecciona el número del destino que deseas eliminar: "))
+        if 1 <= opcion <= len(destinos):
+            destino_eliminado = destinos[opcion - 1]
+            destinos = np.delete(destinos, opcion - 1)
+            costos_viajes = np.delete(costos_viajes, opcion - 1)
+            print(f"Destino '{destino_eliminado}' eliminado exitosamente.")
+        else:
+            print("Opción fuera de rango.")
+    except ValueError:
+        print("Por favor, ingresa un número válido.")
+
+# Función para gestionar la lista de destinos
+def gestionar_registros():
+    while True:
+        print("\nGestión de destinos:")
+        print("1. Agregar un destino")
+        print("2. Eliminar un destino")
+        print("3. Volver al menú principal")
+        opcion = input("Selecciona una opción: ")
+        
+        if opcion == "1":
+            agregar_registro()
+        elif opcion == "2":
+            eliminar_registro()
+        elif opcion == "3":
+            break
+        else:
+            print("Opción no válida. Intenta de nuevo.")
+            
+# Función para solicitar los datos del usuario
+def solicitud_datos():
+    print("BIENVENIDO A NUESTRO GESTOR DE COTIZACION DE VIAJES")
+    print("Para cotizar tu viaje necesitamos hacer un registro de datos, así que necesitaremos un poco de tu información personal.")
+   
+    print("Registro de datos")
+    nombre = input("Nombre: ")
+    identificacion = input("Identificación: ")
+    edad = int(input("Edad: "))
+    direccion = input("Dirección: ")
+    print(f"Bienvenido/a {nombre}, vamos a calcular tu cotización.\n")
+    return nombre, edad  # Devolver el nombre y la edad para usarlo al guardar
+
+# Función para consultar los costos de alojamiento
+def consultar_costos_alojamientos():
+    print("\nCostos de alojamiento:") 
+    tipos_alojamiento = np.array(["Económico", "Estándar", "Lujo"])
+    for i, costo in enumerate(costos_alojamiento):
+        print(f"{i + 1}. {tipos_alojamiento[i]} - ${costo:,.0f} por día")
+
+    while True:
+        opcion = input("Elige el número del tipo de alojamiento que deseas (1-3): ")
+        if opcion.isdigit():
+            opcion = int(opcion) - 1
+            if 0 <= opcion < len(costos_alojamiento):
+                return costos_alojamiento[opcion]
+            else:
+                print("Opción fuera de rango. Intenta de nuevo.")
+        else:
+            print("Entrada no válida. Por favor ingresa un número entre 1 y 3.")
+
+# Función para consultar los costos de transporte dentro del país
+def consultar_costos_transporte():
+    print("\nCostos de transporte:")
+    medios_transporte = np.array(["Avión", "Tren", "Coche"])
+    for i, costo in enumerate(costos_transporte):
+        print(f"{i + 1}. {medios_transporte[i]} - ${costo:,.0f}")
+    
+    while True:
+        opcion = input("Elige el medio de transporte (1-3): ")
+        if opcion.isdigit():
+            opcion = int(opcion) - 1
+            if 0 <= opcion < len(costos_transporte):
+                return medios_transporte[opcion], costos_transporte[opcion]
+            else:
+                print("Opción fuera de rango. Intenta de nuevo.")
+        else:
+            print("Entrada no válida. Por favor ingresa un número entre 1 y 3.")
+
+# Función para calcular un descuento por edad
+def calcular_descuento_por_edad(costo, edad):
+    if edad < 18:
+        descuento = 0.10  # 10% de descuento
+        print("Por ser menor de edad, obtienes un descuento del 10%.")
+    elif edad >= 60:
+        descuento = 0.15  # 15% de descuento
+        print("Por ser mayor de 60 años, obtienes un descuento del 15%.")
+    else:
+        descuento = 0
+    return costo * (1 - descuento)
+
+# Función para aplicar promoción según destino
+def aplicar_promocion_destino(costo, destino):
+    destinos_promocion = ["Colombia", "Brasil", "Chile"]  # Ejemplo de destinos con descuento
+    if destino in destinos_promocion:
+        print(f"¡Felicidades! Hay una promoción especial para {destino}. Recibes un 20% de descuento.")
+        return costo * 0.8  # Aplica un descuento del 20%
+    return costo
+
+# Función para agregar cargos adicionales según transporte
+def aplicar_cargo_transporte(costo, medio_transporte):
+    if medio_transporte == "Avión":
+        print("Se aplica un cargo adicional del 5% por transporte aéreo.")
+        return costo * 1.05  # 5% de cargo adicional
+    elif medio_transporte == "Coche":
+        print("Incluye un cargo adicional por combustible.")
+        return costo + 100000  # Cargo fijo adicional
+    return costo
+
+# Función principal para calcular el costo total del viaje
+def calcular_costo_viaje():
+    # Solicitar datos del usuario
+    nombre, edad = solicitud_datos()
+    
+    # Consultar costos
+    print("\nPrimero, selecciona el país que deseas visitar:")
+    destino, costo_viaje = consultar_costos_viajes()
+    costo_viaje = aplicar_promocion_destino(costo_viaje, destino)
+    
+    print("\nAhora, selecciona el tipo de alojamiento que prefieres:")
+    costo_alojamiento_diario = consultar_costos_alojamientos()
+    dias = int(input(f"\n¿En cuántos días planeas estar en {destino}? "))
+    costo_alojamiento = costo_alojamiento_diario * dias
+    
+    print("\nFinalmente, selecciona el medio de transporte que utilizarás:")
+    medio_transporte, costo_transporte = consultar_costos_transporte()
+    costo_total = costo_viaje + costo_alojamiento + costo_transporte
+    costo_total = calcular_descuento_por_edad(costo_total, edad)
+    costo_total = aplicar_cargo_transporte(costo_total, medio_transporte)
+    
+    print(f"\nResumen de la cotización para {nombre}:")
+    print(f"Destino: {destino} - ${costo_viaje:,.0f}")
+    print(f"Alojamiento: {dias} noches - ${costo_alojamiento:,.0f}")
+    print(f"Transporte: {medio_transporte} - ${costo_transporte:,.0f}")
+    print(f"Costo total del viaje: ${costo_total:,.0f}")
+
+# Menú principal
+def menu_principal():
+    while True:
+        print("\nMenú principal:")
+        print("1. Gestionar destinos")
+        print("2. Cotizar un viaje")
+        print("3. Salir")
+        opcion = input("Selecciona una opción: ")
+        
+        if opcion == "1":
+            gestionar_registros()
+        elif opcion == "2":
+            calcular_costo_viaje()
+        elif opcion == "3":
+            print("Gracias por usar el gestor de viajes. ¡Hasta luego!")
+            break
+        else:
+            print("Opción no válida. Intenta de nuevo.")
+
+# Ejecución del programa
+menu_principal()
+    
+
+
