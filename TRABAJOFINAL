@@ -90,6 +90,8 @@ def gestionar_registros():
         else:
             print("Opción no válida. Intenta de nuevo.")
             
+            
+            
 # Función para solicitar los datos del usuario
 def solicitud_datos():
     print("BIENVENIDO A NUESTRO GESTOR DE COTIZACION DE VIAJES")
@@ -214,9 +216,25 @@ def menu_principal():
             break
         else:
             print("Opción no válida. Intenta de nuevo.")
+            
+            
+class Usuario:
+    def __init__(self, nombre, transporte, destino):
+        self.nombre = nombre
+        self.transporte = transporte
+        self.destino = destino
+
+#crear unregistro de un usuario
+id = input ("ingrese id:")
+nombre = input ("ingrese nombre:")
+transporte = input ("ingrese transporte:")
+destino = input ("ingrese destino:")
+
+usuario = Usuario(nombre, transporte, destino)
+
+usuarios = []
 
 # Ejecución del programa
 menu_principal()
-    
 
 
